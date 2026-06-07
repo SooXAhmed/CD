@@ -20,7 +20,7 @@ spec:
           image: python:3.11-slim
           ports:
             - containerPort: 5000
-          command: ["python"]
+          command: ["python3"]
           args:
             - -c
             - |
