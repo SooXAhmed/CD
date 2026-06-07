@@ -1,47 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app-deployment
+  name: nginx-deployment
   namespace: sohila
-
 spec:
   replicas: 1
-
   selector:
     matchLabels:
-      app: flask-app
+      app: nginx
 
   template:
     metadata:
       labels:
-        app: flask-app
+        app: nginx
 
     spec:
       containers:
-        - name: flask-app
-          image: python:3.11-slim
-
-          command:
-            - /bin/sh
-            - -c
-
-          args:
-            - |
-              pip install flask &&
-              python -c "
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return 'Hello from Flask'
-
-app.run(host='0.0.0.0', port=5000)
-"
-
+        - name: nginx
+          image: nginx:latest
           ports:
-            - containerPort: 5000
-
-          env:
-            - name: FLASK_ENV
-              value: production
+            - containerPort: 80
