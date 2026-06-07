@@ -3,10 +3,6 @@ kind: Deployment
 metadata:
   name: flask-app-deployment
   namespace: sohila
-  labels:
-    app: flask-app
-  annotations:
-    argocd.argoproj.io/tracking-id: sohilaahmed:apps/Deployment:default/flask-app-deployment
 
 spec:
   replicas: 1
@@ -30,11 +26,22 @@ spec:
             - -c
 
           args:
-            - python -m pip install flask && python -c "from flask import Flask; app=Flask(__name__); @app.route('/'); def home(): return 'Hello from Flask'; app.run(host='0.0.0.0', port=5000)"
+            - |
+              pip install flask &&
+              python -c "
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return 'Hello from Flask'
+
+app.run(host='0.0.0.0', port=5000)
+"
 
           ports:
             - containerPort: 5000
 
           env:
             - name: FLASK_ENV
-              value: "production"
+              value: production
