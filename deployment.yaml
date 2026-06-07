@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  namespace: default
+  labels:
+    app: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+        - name: flask-app
+          image: python:3.11-slim
+          ports:
+            - containerPort: 5000
+          command: ["python"]
+          args:
+            - -c
+            - |
+              from flask import Flask
+              app = Flask(__name__)
+
+              @app.route("/")
+              def home():
+                  return "Hello from Flask on Kubernetes!"
+
+              app.run(host="0.0.0.0", port=5000)
+          env:
+            - name: FLASK_ENV
+              value: "production"
